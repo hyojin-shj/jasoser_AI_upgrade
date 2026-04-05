@@ -9,3 +9,12 @@ matplotlib
 sentence-transformers
 google-generativeai
 langchain-google-genai
+torch
+torchvision
+scikit-learn
+joblib
+mlflow
+transformers
+datasets
+accelerate
+evaluate
