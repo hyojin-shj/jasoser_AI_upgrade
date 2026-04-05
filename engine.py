@@ -37,14 +37,10 @@ class HREvaluator:
         self.gemini_model = load_gemini()
 
     def _sanitize_feedback(self, text: str) -> str:
-        """Markdown 헤더(#) 및 과도한 볼드체(**) 등을 평문화"""
-        # 헤더(#) 제거
         text = re.sub(r'#+\s*', '', text)
-        # 긴 문장의 경우 첫 문장만 추출하거나 전처리
         return text.strip()
 
     def _parse_scores(self, text: str) -> Dict[str, float]:
-        """모델 결과에서 점수 파싱"""
         scores = {}
         for criterion in CRITERIA:
             try:
@@ -59,7 +55,6 @@ class HREvaluator:
         return scores
 
     def _get_emphasis(self, model_name: str) -> Dict[str, float]:
-        """모델별 주된 평가 가중치 (시각화용)"""
         weights = {
             "OpenAI": {"논리구조": 85, "문맥": 75, "유사성": 50, "기술분석": 65},
             "BERT": {"논리구조": 45, "문맥": 82, "유사성": 95, "기술분석": 35},
@@ -68,28 +63,28 @@ class HREvaluator:
         }
         return weights.get(model_name, {"논리구조": 70, "문맥": 70, "유사성": 70, "기술분석": 70})
 
+    def get_model_specs(self, model_name: str) -> Dict[str, float]:
+        """모델별 스펙(비용, 난이도, 보안) 비교 수치"""
+        # 비용: 낮을수록 좋음(싸다), 난이도: 낮을수록 좋음(쉽다), 보안: 높을수록 좋음
+        specs = {
+            "OpenAI": {"비용": 80, "학습난이도": 20, "보안": 40}, # API 비용 발생, 사용 쉬움, 클라우드 종속
+            "BERT": {"비용": 10, "학습난이도": 90, "보안": 95},   # 로컬 실행(무료), 모델 구현 어려움, 데이터 유출 없음
+            "Gemini": {"비용": 50, "학습난이도": 30, "보안": 45}, # 적절한 API 비용, 구글 인프라
+            "Qwen": {"비용": 40, "학습난이도": 60, "보안": 80}    # 오프라인 구축 가능, 어느 정도 기술 지식 필요
+        }
+        return specs.get(model_name, {"비용": 50, "학습난이도": 50, "보안": 50})
+
     def analyze_openai(self, context: str, question: str, answer: str):
         criteria_str = ", ".join(CRITERIA)
         format_str = "\n".join([f"{c}: 점수" for c in CRITERIA])
-        
         prompt = f"""
-        당신은 HR 전문가입니다. 아래 자기소개서를 {len(CRITERIA)}가지 항목({criteria_str})에 대해 0~100점 사이로 평가하고 종합 평가를 작성하세요.
-        중요: 종합평가는 절대 Markdown 헤더(#)를 사용하지 말고 평문으로 작성하세요.
-        
-        [지원 context]
-        {context}
-        [문항]
-        질문: {question}
-        답변: {answer}
-        
-        [출력 형식]
-        {format_str}
-        종합평가: (한 문장의 분석 총평)
+        당신은 HR 전문가입니다. 다음 {len(CRITERIA)}개 항목({criteria_str})에 대해 100점 만점으로 평가하세요.
+        종합평가는 절대 # 헤더를 쓰지 마세요.
+        {context} \n 질문: {question} \n 답변: {answer} \n [출력형식] \n {format_str} \n 종합평가: 총평
         """
         response = self.openai_model.invoke(prompt).content
         scores = self._parse_scores(response)
         total_score = round(min(sum(scores.values()) / len(scores), 100), 1)
-        
         feedback = response.split("종합평가:")[1].strip() if "종합평가:" in response else response[:150]
         
         return {
@@ -97,77 +92,49 @@ class HREvaluator:
             "scores": scores,
             "total_score": total_score,
             "feedback": self._sanitize_feedback(feedback),
-            "emphasis": self._get_emphasis("OpenAI")
+            "emphasis": self._get_emphasis("OpenAI"),
+            "specs": self.get_model_specs("OpenAI")
         }
 
     def analyze_bert(self, context: str, question: str, answer: str):
         emb_query = self.embedding_model.encode(context + question, convert_to_tensor=True)
         emb_ans = self.embedding_model.encode(answer, convert_to_tensor=True)
         similarity = util.cos_sim(emb_query, emb_ans).item() * 100
-        
         scores = {k: round(min(similarity * (0.8 + 0.1 * np.random.rand()) + 5, 100), 1) for k in CRITERIA}
         total_score = round(min(sum(scores.values()) / len(scores), 100), 1)
-        
         return {
             "model": "BERT",
             "scores": scores,
             "total_score": total_score,
-            "feedback": "BERT 유사도 기반 분석입니다. 기존 합격 데이터 및 문항 키워드와의 유사성을 중점적으로 평가했습니다.",
-            "emphasis": self._get_emphasis("BERT")
+            "feedback": "BERT 유사도 기반 분석입니다. 데이터 보안이 보장되며 객관적인 유사성을 측정합니다.",
+            "emphasis": self._get_emphasis("BERT"),
+            "specs": self.get_model_specs("BERT")
         }
 
     def analyze_gemini(self, context: str, question: str, answer: str):
         if not self.gemini_model:
             res = self.analyze_openai(context, question, answer)
-            res["model"] = "Gemini"
-            res["total_score"] = round(min(res["total_score"] * 0.98, 100), 1)
-            res["emphasis"] = self._get_emphasis("Gemini")
+            res["model"] = "Gemini"; res["specs"] = self.get_model_specs("Gemini")
             return res
-            
         criteria_str = ", ".join(CRITERIA)
-        prompt = f"다음 자소서를 전문적으로 분석하세요. 종합평가 시 Markdown 헤더(#)를 절대 사용하지 마세요. {context} \n 질문: {question} \n 답변: {answer} \n 항목별({criteria_str}) 점수와 종합평가를 출력하세요."
+        prompt = f"자소서 전문 분석 하세요. (# 지양) {context} \n 질문: {question} \n 답변: {answer} \n 항목별({criteria_str}) 점수와 종합평가 출력."
         response = self.gemini_model.invoke(prompt).content
         scores = self._parse_scores(response)
         total_score = round(min(sum(scores.values()) / len(scores), 100), 1)
-        
         feedback = response.split("종합평가:")[1].strip() if "종합평가:" in response else response[:150]
-        
         return {
-            "model": "Gemini",
-            "scores": scores,
-            "total_score": total_score,
-            "feedback": self._sanitize_feedback(feedback),
-            "emphasis": self._get_emphasis("Gemini")
+            "model": "Gemini", "scores": scores, "total_score": total_score,
+            "feedback": self._sanitize_feedback(feedback), "emphasis": self._get_emphasis("Gemini"),
+            "specs": self.get_model_specs("Gemini")
         }
 
     def analyze_qwen(self, context: str, question: str, answer: str):
-        criteria_str = ", ".join(CRITERIA)
-        prompt = f"당신은 Qwen 모델 HR 전문가입니다. 종합평가 시 Markdown 헤더(#)를 절대 사용하지 말고 평문으로 답변하세요. {context} \n 질문: {question} \n 답변: {answer} \n 항목별({criteria_str}) 점수와 종합평가를 출력하세요."
-        response = self.openai_model.invoke(prompt).content
-        scores = self._parse_scores(response)
-        total_score = round(min(sum(scores.values()) / len(scores), 100), 1)
-        
-        feedback = response.split("종합평가:")[1].strip() if "종합평가:" in response else response[:150]
-        
-        return {
-            "model": "Qwen",
-            "scores": scores,
-            "total_score": total_score,
-            "feedback": self._sanitize_feedback(feedback),
-            "emphasis": self._get_emphasis("Qwen")
-        }
+        res = self.analyze_openai(context, question, answer)
+        res["model"] = "Qwen"; res["specs"] = self.get_model_specs("Qwen")
+        return res
 
     def evaluate_all_models(self, data: Dict) -> List[Dict]:
-        context = f"회사: {data['company']}, 직무: {data['job']}, 우대: {data['preferences']}, JD: {data['description']}"
+        context = f"회사:{data['company']},직무:{data['job']},JD:{data['description']}"
         if not data["qa_list"]: return []
-        
-        q = data["qa_list"][0]["question"]
-        a = data["qa_list"][0]["answer"]
-        
-        results = [
-            self.analyze_openai(context, q, a),
-            self.analyze_bert(context, q, a),
-            self.analyze_gemini(context, q, a),
-            self.analyze_qwen(context, q, a)
-        ]
-        return results
+        q = data["qa_list"][0]["question"]; a = data["qa_list"][0]["answer"]
+        return [self.analyze_openai(context, q, a), self.analyze_bert(context, q, a), self.analyze_gemini(context, q, a), self.analyze_qwen(context, q, a)]

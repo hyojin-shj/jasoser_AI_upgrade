@@ -28,7 +28,15 @@ st.markdown("""
         color: white;
         border-radius: 10px;
         padding: 10px;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .spec-box {
+        background-color: #e3f2fd;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+        font-size: 0.85rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -46,100 +54,99 @@ with st.sidebar:
     preferences = st.text_area("우대 사항")
     description = st.text_area("직무 설명(JD)")
     st.divider()
-    st.button("🔄 설정 초기화", on_click=lambda: st.session_state.clear())
+    if st.button("🔄 설정 초기화"):
+        st.session_state.clear(); st.rerun()
 
 # --- 메인 영역 ---
 st.title("🎯 AI 자소서 멀티 모델 비교 분석")
 
-# 입력 섹션
 with st.container(border=True):
     st.subheader("📝 자기소개서 입력")
     for i, qa in enumerate(st.session_state.qa_list):
         col1, col2 = st.columns([0.9, 0.1])
         with col1:
-             qa["question"] = st.text_input(f"질문 {i+1}", value=qa["question"], key=f"q_{i}", placeholder="질문을 입력하세요.")
-             qa["answer"] = st.text_area(f"답변 {i+1}", value=qa["answer"], key=f"a_{i}", height=150, placeholder="답변을 입력하세요.")
+             qa["question"] = st.text_input(f"질문 {i+1}", value=qa["question"], key=f"q_{i}")
+             qa["answer"] = st.text_area(f"답변 {i+1}", value=qa["answer"], key=f"a_{i}", height=150)
         with col2:
-            st.write("") # 간격
-            st.write("")
+            st.write(""); st.write("")
             if len(st.session_state.qa_list) > 1:
                 if st.button("❌", key=f"del_{i}"):
                     st.session_state.qa_list.pop(i); st.rerun()
-    
     if st.button("➕ 문항 추가", use_container_width=True):
         st.session_state.qa_list.append({"question": "", "answer": ""}); st.rerun()
 
 st.divider()
 
-# 분석 버튼
 if st.button("🚀 멀티 모델 정밀 분석 시작", type="primary", use_container_width=True):
     if not company or not job:
-        st.warning("회사명과 직무 정보를 입력해주세요.")
+        st.warning("정보를 입력해주세요.")
     else:
-        with st.spinner("4개의 AI 모델이 협력하여 분석 중입니다..."):
+        with st.spinner("AI 엔진이 다각도로 분석 중입니다..."):
             data = {"company": company, "job": job, "preferences": preferences, "description": description, "qa_list": st.session_state.qa_list}
             results = evaluator.evaluate_all_models(data)
             
-            # --- 1. 대시보드 상단: 총점 및 스타차트 ---
+            # --- 1. 대시보드 상단 ---
             st.header("🏆 수치 기반 통합 리포트")
-            
             radar_cols = st.columns(4)
-            def create_radar_chart(model_name, scores_dict):
-                labels = CRITERIA
-                stats = [scores_dict[l] for l in labels]
+            
+            def create_radar(model_name, scores_dict, color='#6c5ce7'):
+                labels = list(scores_dict.keys())
+                stats = list(scores_dict.values())
                 angles = np.linspace(0, 2*np.pi, len(labels), endpoint=False).tolist()
                 stats += stats[:1]; angles += angles[:1]
-                
-                fig, ax = plt.subplots(figsize=(4, 4), subplot_kw=dict(polar=True))
-                ax.fill(angles, stats, color='#6c5ce7', alpha=0.2)
-                ax.plot(angles, stats, color='#6c5ce7', linewidth=2, marker='o', markersize=4)
-                ax.set_xticks(angles[:-1])
-                ax.set_xticklabels(labels, fontsize=9)
-                ax.set_title(model_name, size=14, pad=20, weight='bold')
+                fig, ax = plt.subplots(figsize=(4,4), subplot_kw=dict(polar=True))
+                ax.fill(angles, stats, color=color, alpha=0.2)
+                ax.plot(angles, stats, color=color, linewidth=2, marker='o')
+                ax.set_xticks(angles[:-1]); ax.set_xticklabels(labels, fontsize=8)
+                ax.set_title(model_name, size=14, weight='bold', pad=20)
                 return fig
 
             for i, res in enumerate(results):
                 with radar_cols[i]:
-                    st.markdown(f"""<div class='metric-container'><h3>{res['total_score']}점</h3><p>{res['model']}</p></div>""", unsafe_allow_html=True)
-                    st.pyplot(create_radar_chart(res['model'], res['scores']))
+                    st.markdown(f"<div class='metric-container'><h3>{res['total_score']}점</h3><p>{res['model']}</p></div>", unsafe_allow_html=True)
+                    st.pyplot(create_radar(res['model'], res['scores']))
 
             st.divider()
 
-            # --- 2. 모델별 분석 가중치 비교 (통합 시각화) ---
-            st.subheader("⚖️ 모델별 평가 가중치 비교 (Emphasis Analysis)")
-            st.write("각 모델이 어떤 기준에 가중치를 두어 점수를 부여했는지 비교합니다.")
+            # --- 2. 가중치 및 스펙 비교 ---
+            st.subheader("⚖️ 모델별 전략적 비교 (Weights & Specs)")
             
-            emp_list = []
-            for res in results:
-                for k, v in res["emphasis"].items():
-                    emp_list.append({"Model": res["model"], "Criteria": k, "Weight": v})
+            col_left, col_right = st.columns(2)
             
-            df_emp = pd.DataFrame(emp_list)
-            
-            # 피벗하여 그룹형 막대 그래프 생성
-            df_pivot = df_emp.pivot(index="Criteria", columns="Model", values="Weight")
-            st.bar_chart(df_pivot)
+            with col_left:
+                st.write("**[평가 가중치 비교]** 모델별 중점 항목")
+                emp_list = [{"Model": r["model"], "Criteria": k, "Weight": v} for r in results for k, v in r["emphasis"].items()]
+                df_emp = pd.DataFrame(emp_list).pivot(index="Criteria", columns="Model", values="Weight")
+                st.bar_chart(df_pivot if "df_pivot" in locals() else df_emp)
+
+            with col_right:
+                st.write("**[운영 효율성 시뮬레이션]** 비용, 난이도, 보안")
+                spec_list = [{"Model": r["model"], "Criteria": k, "Value": v} for r in results for k, v in r["specs"].items()]
+                df_spec = pd.DataFrame(spec_list).pivot(index="Criteria", columns="Model", values="Value")
+                st.line_chart(df_spec) # 선형 차트로 효율성 비교
 
             st.divider()
 
-            # --- 3. 모델별 상세 피드백 (균형 잡힌 레이아웃) ---
+            # --- 3. 상세 리포트 ---
             st.subheader("📑 모델별 상세 분석 리포트")
-            
-            # 2x2 그리드로 배치
             grid_cols = st.columns(2)
             for i, res in enumerate(results):
                 with grid_cols[i % 2]:
                     st.markdown(f"""
                     <div class='report-card'>
                         <h4 style='color: #6c5ce7;'>📍 {res['model']} Analyst</h4>
-                        <p style='font-size: 0.95rem; line-height: 1.6;'>{res['feedback']}</p>
+                        <p style='font-size: 0.92rem;'>{res['feedback']}</p>
                         <hr>
-                        <small><b>핵심 강조:</b> {list(res['emphasis'].keys())[0]}</small>
+                        <div style='display: flex; justify-content: space-between;'>
+                            <span>💰 비용: {res['specs']['비용']}</span>
+                            <span>🛠️ 난이도: {res['specs']['학습난이도']}</span>
+                            <span>🔒 보안: {res['specs']['보안']}</span>
+                        </div>
                     </div>
                     """, unsafe_allow_html=True)
 
-            # --- 4. 최종 인사이트 ---
-            with st.expander("💡 분석 결과 종합 가이드 (Total Insight)", expanded=True):
+            # --- 4. 요약 ---
+            with st.expander("💡 분석 결과 종합 가이드", expanded=True):
                 st.info(f"""
                 - **종합 의견**: 현재 자소서는 **{results[0]['model']}** 모델 기준 {results[0]['total_score']}점으로 평가되었습니다.
                 - **점수 차이 발생 이유**: 
