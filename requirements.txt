@@ -5,3 +5,7 @@ python-dotenv
 streamlit
 pydantic
 pandas
+matplotlib
+sentence-transformers
+google-generativeai
+langchain-google-genai
