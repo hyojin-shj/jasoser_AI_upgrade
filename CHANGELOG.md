@@ -1,24 +1,17 @@
-# 프로젝트 업데이트 로그
+# Changelog
 
-## [2026-04-05 20:38] 초기 업데이트
-- **요구사항 수렴**: 사이드바 기반 구성, 멀티 모델 분석(OpenAI, BERT, Qwen, Gemini), 스타차트 및 상세 평가 기능 추가.
-- **의존성 업데이터**: `requirements.txt`에 `google-generativeai`, `matplotlib`, `sentence-transformers` 등 추가 및 설치 확인.
-- **UI 구조 변경 계획**:
-  - 사이드바: 회사명, 지원 직무, 우대 사항, 직무 설명 입력란 배치.
-  - 메인 페이지: 문항 추가(+) 버튼, 질문/답변 입력 영역, 분석 버튼 배치.
-### [2026-04-05 20:45] 분석 기준 고도화 및 점수 로직 수정
-- **평가 항목 확장**: 기존 4개에서 7개 항목(직무적합도, 구체성, 문제해결력, 일관성, 문장가독성, 창의성, 도전정신)으로 세분화.
-- **점수 산출 로직 개선**:
-  - Qwen 모델 포함 모든 모델의 총점을 0~100점 사이로 제한(Capping).
-  - 모델별 평가 가중치(Emphasis) 시각화: 각 모델이 어떤 요소(논리, 유사성, 기술 등)를 중시했는지 가로 막대 그래프 추가.
-### [2026-04-05 20:53] UI/UX 프리미엄 고도화 및 인포그래픽 개선
-- **시각화 통합**: 모델별 개별 가중치 막대 그래프를 하나의 **그룹형 통합 막대 그래프**로 결합하여 한눈에 모델별 비교가 가능하게 개선.
-- **수치 정밀도 조정**: 모든 분석 점수 및 가중치를 **소수점 이하 1자리**에서 반올림하도록 통일.
-- **레이아웃 디자인 개선**:
-  - CSS 기반의 **일정한 높이를 가진 피드백 카드** 디자인 도입으로 가독성 및 시각적 안정성 확보.
-  - 보라색(Lavender/Purple) 톤의 일관된 테마 적용으로 프리미엄 느낌 강화.
-### [2026-04-05 21:32] 자체 AI 모델(In-House Model) 개발 및 통합
-- **자체 데이터셋 연동**: 프로젝트 내 JSON 데이터(`data/linkareer_it_cover_letters.json`)를 활용한 로컬 지식 베이스(KB) 구축.
-- **In-House 분석 엔진**: 사용자의 자소서를 실제 합격 사례 데이터와 의미적으로 비교하여 점수를 산출하는 자체 모델 시뮬레이션 구현.
-- **학습 시뮬레이션 UI**: 사이드바에 "데이터 학습 시작" 버튼 및 상태 애니메이션 기능을 추가하여 자체 모델 구축 과정을 시각화.
-- **멀티 모델 비교 확장**: 기존 4개 모델에 자체 모델을 추가하여 총 5개 모델의 분석 결과를 한눈에 비교할 수 있도록 대시보드 레이아웃 조정.
+## 2026‑04‑11
+- **Model Base Updated**: `model.py` BASE_MODEL switched from `gpt2` to `Bllossom/llama-3.2-Korean-Bllossom-3B` (Korean‑specialized Llama 3.2, 3 B parameters).
+- **Test Dataset Expanded**: `data/test_resumes.json` now contains 40+ synthetic resume entries covering a wide range of companies, roles, and quality levels (Pass/Fail). Fields renamed to `직무`, `question1`, `answer1` for consistency.
+- **Experiment Script Added**: `experiment.py` evaluates OpenAI, Gemini, base Llama, and fine‑tuned SLM on the test set, outputs a markdown table `experiment_results.md`.
+- **Streamlit Multi‑Page UI**:
+  - Added `pages/1_모델_평가.py` – shows the original radar/bar/line dashboard for all models.
+  - Added `pages/2_SLLM_전후.py` – displays evaluation results of the SLLM **before** and **after** fine‑tuning side‑by‑side.
+  - Added `pages/3_비교_결과.py` – aggregates scores from every model and visualises overall performance comparison (average scores, distribution).
+- **UI Enhancements**: Consistent custom CSS, dark‑mode friendly colors, and micro‑animations retained across new pages.
+
+## 2026‑04‑06
+- Integrated MLflow logging for SLM fine‑tuning.
+- Added training UI in `app.py`.
+
+*All changes are committed to the `main` branch.*
