@@ -1,6 +1,9 @@
 # 🚀 AI Resume Coach: 맞춤형 자기소개서 평가 및 개선 시스템
 "Small Language Model(SLM)을 활용한 데이터 기반 취업 컨설팅 및 이력서 최적화 서비스"
 
+<img width="1920" height="1080" alt="1" src="https://github.com/user-attachments/assets/549d904c-c234-4f60-950a-04f7d1be33fc" />
+
+
 ![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
 ![MLflow](https://img.shields.io/badge/MLflow-0194E2?style=for-the-badge&logo=mlflow&logoColor=white)
@@ -11,6 +14,8 @@
 ## 🔗 서비스 구성 (Deployment & Repo)
 
 *   **시현 영상:** [👉 [프로젝트 소개 영상 바로가기](https://youtu.be/t5xqTE-M338)]
+*   <img width="1920" height="1080" alt="7" src="https://github.com/user-attachments/assets/04e0e6e3-1d7e-4f14-ba1c-2dfabbc184c2" />
+
 ---
 
 ## 📅 프로젝트 개요
@@ -24,14 +29,24 @@
 ### 1️⃣ 실시간 AI 자소서 평가 및 피드백
 *   **다각도 분석:** 가독성, 논리성, 직무 적합성 등 7가지 지표를 바탕으로 점수화 및 상세 피드백 제공.
 *   **멀티 모델 비교:** GPT-4와 같은 거대 모델과 자체 튜닝한 SLM(Qwen 1.5B 기반)의 평가 결과를 실시간으로 비교 분석.
+*   <img width="1920" height="1080" alt="12" src="https://github.com/user-attachments/assets/88334227-0c65-4bc2-9466-903fc08544a7" />
+<img width="1920" height="1080" alt="자소서AI" src="https://github.com/user-attachments/assets/16fe7752-98c2-435b-a004-8cca3385ff10" />
+
+
+
 
 ### 2️⃣ 데이터 기반 SLM 최적화 (MLOps)
 *   **MLflow 연동:** 모델 학습 과정(Loss, Metrics)을 실시간으로 로깅하고 시각화하여 최적의 가중치 관리.
 *   **경량 모델 활용:** Qwen 2.5 1.5B 모델을 LoRA/QLoRA 기법으로 파인튜닝하여 저비용·고효율의 성능 확보.
 
+<img width="1920" height="1080" alt="9" src="https://github.com/user-attachments/assets/d73399e3-7784-473f-b4d9-e5e31f7edf06" />
+
+
 ### 3️⃣ 성능 벤치마킹 대시보드
 *   **Ground Truth 비교:** 실제 전문가의 평가 데이터와 AI의 평가 결과 간의 유사도를 측정하여 모델의 신뢰성 검증.
 *   **시각화 리포트:** Plotly와 Matplotlib을 활용하여 모델별 성능 분포를 한눈에 파악할 수 있는 차트 제공.
+
+<img width="1920" height="1080" alt="14" src="https://github.com/user-attachments/assets/af80c0a9-6c2a-4cbb-a561-a8b41b975f11" />
 
 ---
 
@@ -41,6 +56,8 @@
 2.  **인사이트:** 
     *   **비용 효율성:** SLM이 거대 모델 대비 10% 미만의 비용으로 유사한 도메인 성능을 낼 수 있음을 확인.
     *   **정교한 피드백:** 단순 요약을 넘어, 문장 단위의 구체적인 개선안 제시 가능.
+
+<img width="1920" height="1080" alt="16" src="https://github.com/user-attachments/assets/5853e5d3-7ad3-4f20-8915-5c9ca667cb53" />
 
 ---
 
@@ -65,34 +82,8 @@
  ┣ 📜 model.py             # 모델 구조 정의 및 가중치 관리
  ┣ 📂 data/                # 학습 및 테스트 데이터셋 (.json)
  ┗ 📜 requirements.txt     # 프로젝트 의존성 관리
-```
----
-## 🚀 트러블 슈팅
+```<img width="1920" height="1080" alt="1" src="https://github.com/user-attachments/assets/ecbe47b0-be29-470d-b3d8-92b0a1e45b49" />
 
-
-요청하신 4가지 핵심 트러블슈팅 사례를 포함하여 더욱 전문적인 기술 리포트 형식으로 README.md를 업데이트해 드릴게요.
-
-README.md 수정 내용 (Troubleshooting 중심)
-markdown
-# 🚀 AI Resume Coach: 맞춤형 자기소개서 평가 및 개선 시스템
-"Small Language Model(SLM)을 활용한 데이터 기반 취업 컨설팅 및 이력서 최적화 서비스"
-![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
-![MLflow](https://img.shields.io/badge/MLflow-0194E2?style=for-the-badge&logo=mlflow&logoColor=white)
-![HuggingFace](https://img.shields.io/badge/Hugging%20Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)
----
-## 📅 프로젝트 개요
-*   **프로젝트 기간:** 2026.04 ~ 진행 중
-*   **한 줄 소개:** 거대 언어 모델(LLM)의 비용 문제를 해결하고, 특정 도메인(자소서)에 최적화된 SLM 기반의 AI 이력서 코칭 플랫폼
----
-## 🛠️ 기술 스택 (Tech Stack)
-| 구분 | 기술 | 활용 내용 |
-| :--- | :--- | :--- |
-| **Frontend** | **Streamlit** | 대시보드 시각화 및 사용자 인터페이스(UI) 구성 |
-| **Backend** | **Python** | 자소서 평가 로직 구현 및 모델 추론 엔진 구축 |
-| **AI / ML** | **Qwen / PyTorch** | SLM 파인튜닝 (LoRA), HuggingFace Transformers 활용 |
-| **MLOps** | **MLflow** | 실험 관리, 하이퍼파라미터 트래킹 및 모델 레지스트리 |
----
 ## 🚀 트러블 슈팅 (Troubleshooting)
 
 ### 🔧 이슈 1: 로컬 PC 환경에서의 모델 튜닝 한계 및 모델 전환
