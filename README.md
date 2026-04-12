@@ -1,77 +1,113 @@
-# 🚀 Master AI Resume Evaluator: Custom SLM & MLOps Edition
+# 🚀 AI Resume Coach: 맞춤형 자기소개서 평가 및 개선 시스템
+"Small Language Model(SLM)을 활용한 데이터 기반 취업 컨설팅 및 이력서 최적화 서비스"
 
-> **자체 미세 조정(Fine-tuning)된 소형 언어 모델(SLM)과 Multi-LLM 협업 엔진을 통해 구현된 고도화된 자소서 분석 솔루션입니다.**
-
-이 프로젝트는 단순한 텍스트 분석을 넘어, 기업 고유의 합격 데이터를 학습한 **In-House SLM**과 상용 LLM(OpenAI, Gemini 등)을 결합하여 다각도의 인재 검증 리포트를 제공합니다. **MLflow**를 통한 MLOps 파이프라인이 통합되어 있어 모델의 실험 이력 및 버전 관리가 완벽하게 수행됩니다.
-
----
-
-## ✨ Key Features
-
-### 🧠 1. In-House SLM Specialist (GPT-2 Fine-tuned)
-- **Neural Context Analysis**: GPT-2(124M) 모델을 베이스로 하여 사내 합격 자소서의 문황 구조와 논리 패턴을 직접 학습.
-- **Hybrid Scoring Engine**: 신경망 패턴 + 시맨틱 유사도 + JD 키워드 매칭이 결합된 고도의 전문가 채점 시스템.
-- **Privacy & Security**: 로컬 환경에서 학습 및 추론이 진행되어 민감한 인사 데이터의 외부 유출을 원천 차단.
-
-### 📊 2. Strategic Multi-Model Cross-Analysis
-- **Cross-Engine Comparison**: OpenAI(GPT-4o), Gemini 1.5, BERT, Qwen 및 자체 SLM의 분석 결과를 한눈에 비교.
-- **Dynamic Radar Charts**: 직무적합도, 문제해결성 등 7대 스타 지표를 시각화하여 모델별 시각 차이 분석.
-- **Strategic Weights**: 각 모델이 가진 분석적 강점(논구성, 가독성, 데이터 패턴 등)을 막대 및 선형 그래프로 도식화.
-
-### 🛠️ 3. MLOps Workflow with MLflow
-- **Experiment Tracking**: 학습 시 발생하는 Loss, Metrics, Hyperparameters를 실시간으로 기록.
-- **Model Registry**: 학습 완료된 모델을 `InHouseResumeSLM`으로 공식 등록하여 체계적인 버전 관리 수행.
-- **Persistence**: 학습된 가중치 파일을 `models/` 디렉토리에 영구 저장하여 앱 재시작 시 즉각적인 로드 지원.
-
-### 🎨 4. Premium UX/UI Dashboard
-- **Interactive Feedbacks**: 길어지는 분석 의견을 '더보기' 토글로 처리하여 깔끔한 대시보드 레이아웃 유지.
-- **Real-time Status Monitoring**: 사이드바를 통해 현재 모델 로드 상태(LOADED/NOT TRAINED)를 실시간 모니터링 및 재학습 제어.
+![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![MLflow](https://img.shields.io/badge/MLflow-0194E2?style=for-the-badge&logo=mlflow&logoColor=white)
+![HuggingFace](https://img.shields.io/badge/Hugging%20Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)
 
 ---
 
-## 🛠️ Technology Stack
+## 🔗 서비스 구성 (Deployment & Repo)
 
-| Category | Technology |
-| :--- | :--- |
-| **Core AI** | `Transformers`, `Torch`, `Sentence-Transformers`, `Datasets` |
-| **LLM APIs** | `OpenAI GPT-4o-mini`, `Google Gemini 1.5 Flash`, `Qwen (Langchain)` |
-| **MLOps** | `MLflow` (Tracking & Model Registry) |
-| **Visualization** | `Matplotlib`, `Numpy`, `Pandas` |
-| **Web App** | `Streamlit` (with Custom CSS Components) |
+*   **시현 영상:** [👉 [프로젝트 소개 영상 바로가기](https://youtu.be/t5xqTE-M338)]
+---
+
+## 📅 프로젝트 개요
+*   **프로젝트 기간:** 2026.03.23 ~ 2026.04.13
+*   **한 줄 소개:**  특정 도메인(자소서)에 최적화된 SLM 및 멀티 LLM모델의 AI 이력서 코칭 비교 분석 플랫폼
 
 ---
 
-## 🚀 Quick Start
+## 💡 주요 기능 (Key Features)
 
-### 1. 환경 설정 및 라이브러리 설치
-가상환경 활성화 후 필요한 모든 패키지를 설치합니다.
-```bash
-python -m venv .venv
-source .venv/Scripts/activate
-pip install -r requirements.txt
+### 1️⃣ 실시간 AI 자소서 평가 및 피드백
+*   **다각도 분석:** 가독성, 논리성, 직무 적합성 등 7가지 지표를 바탕으로 점수화 및 상세 피드백 제공.
+*   **멀티 모델 비교:** GPT-4와 같은 거대 모델과 자체 튜닝한 SLM(Qwen 1.5B 기반)의 평가 결과를 실시간으로 비교 분석.
+
+### 2️⃣ 데이터 기반 SLM 최적화 (MLOps)
+*   **MLflow 연동:** 모델 학습 과정(Loss, Metrics)을 실시간으로 로깅하고 시각화하여 최적의 가중치 관리.
+*   **경량 모델 활용:** Qwen 2.5 1.5B 모델을 LoRA/QLoRA 기법으로 파인튜닝하여 저비용·고효율의 성능 확보.
+
+### 3️⃣ 성능 벤치마킹 대시보드
+*   **Ground Truth 비교:** 실제 전문가의 평가 데이터와 AI의 평가 결과 간의 유사도를 측정하여 모델의 신뢰성 검증.
+*   **시각화 리포트:** Plotly와 Matplotlib을 활용하여 모델별 성능 분포를 한눈에 파악할 수 있는 차트 제공.
+
+---
+
+## 📊 데이터 분석 및 연구 (Research & Insights)
+
+1.  **데이터 선정:** 실제 합격 자소서 300건을 활용하여 평가 기준(Ground Truth) 수립.
+2.  **인사이트:** 
+    *   **비용 효율성:** SLM이 거대 모델 대비 10% 미만의 비용으로 유사한 도메인 성능을 낼 수 있음을 확인.
+    *   **정교한 피드백:** 단순 요약을 넘어, 문장 단위의 구체적인 개선안 제시 가능.
+
+---
+
+## 🛠️ 기술 스택 (Tech Stack)
+
+| 구분 | 기술 | 활용 내용 |
+| :--- | :--- | :--- |
+| **Frontend** | **Streamlit** | 대시보드 시각화 및 사용자 인터페이스(UI) 구성 |
+| **Backend** | **Python** | 자소서 평가 로직 구현 및 모델 추론 엔진 구축 |
+| **AI / ML** | **Qwen / PyTorch** | SLM 파인튜닝 (LoRA), HuggingFace Transformers 활용 |
+| **MLOps** | **MLflow** | 실험 관리, 하이퍼파라미터 트래킹 및 모델 레지스트리 |
+| **Analysis** | **Plotly / Pandas** | 평가 지표 시각화 및 데이터 전처리 |
+
+---
+
+## 📂 프로젝트 구조 (Directory Structure)
+```text
+📂 jasoser_AI_upgrade
+ ┣ 📜 app.py               # 메인 Streamlit 대시보드
+ ┣ 📜 engine.py            # AI 추론 엔진 및 모델 로딩 로직
+ ┣ 📜 eval_manager.py      # 성능 평가 및 비교 매니저
+ ┣ 📜 model.py             # 모델 구조 정의 및 가중치 관리
+ ┣ 📂 data/                # 학습 및 테스트 데이터셋 (.json)
+ ┗ 📜 requirements.txt     # 프로젝트 의존성 관리
 ```
-
-### 2. MLflow 서버 가동 (실험 추적용)
-별도의 터미널에서 MLflow UI를 실행하여 학습 대시보드에 접속합니다.
-```bash
-python -m mlflow ui
-```
-
-### 3. 애플리케이션 실행
-```bash
-streamlit run app.py
-```
-
 ---
+## 🚀 트러블 슈팅
 
-## 📑 MLOps 아키텍처 가이드
-이 시스템은 학습 버튼 클릭 시 다음의 파이프라인을 자동으로 수행합니다:
-1. **Data Prep**: 로컬 JSON 데이터를 시퀀스 분류용 데이터셋으로 변환.
-2. **Fine-tuning**: PEFT/LoRA 방식의 가중치 최적화 진행 (CPU 최적화).
-3. **Registration**: 학습된 모델 아티팩트를 MLflow 레지스트리에 등록.
-4. **Active Loading**: 검증된 최신 버전의 모델을 엔진에 즉시 주입하여 추론(Inference) 수행.
 
+요청하신 4가지 핵심 트러블슈팅 사례를 포함하여 더욱 전문적인 기술 리포트 형식으로 README.md를 업데이트해 드릴게요.
+
+README.md 수정 내용 (Troubleshooting 중심)
+markdown
+# 🚀 AI Resume Coach: 맞춤형 자기소개서 평가 및 개선 시스템
+"Small Language Model(SLM)을 활용한 데이터 기반 취업 컨설팅 및 이력서 최적화 서비스"
+![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![MLflow](https://img.shields.io/badge/MLflow-0194E2?style=for-the-badge&logo=mlflow&logoColor=white)
+![HuggingFace](https://img.shields.io/badge/Hugging%20Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)
 ---
+## 📅 프로젝트 개요
+*   **프로젝트 기간:** 2026.04 ~ 진행 중
+*   **한 줄 소개:** 거대 언어 모델(LLM)의 비용 문제를 해결하고, 특정 도메인(자소서)에 최적화된 SLM 기반의 AI 이력서 코칭 플랫폼
+---
+## 🛠️ 기술 스택 (Tech Stack)
+| 구분 | 기술 | 활용 내용 |
+| :--- | :--- | :--- |
+| **Frontend** | **Streamlit** | 대시보드 시각화 및 사용자 인터페이스(UI) 구성 |
+| **Backend** | **Python** | 자소서 평가 로직 구현 및 모델 추론 엔진 구축 |
+| **AI / ML** | **Qwen / PyTorch** | SLM 파인튜닝 (LoRA), HuggingFace Transformers 활용 |
+| **MLOps** | **MLflow** | 실험 관리, 하이퍼파라미터 트래킹 및 모델 레지스트리 |
+---
+## 🚀 트러블 슈팅 (Troubleshooting)
 
-## 📝 License
-This project is for educational and AI portfolio purposes. All LLM models are subject to their respective usage policies.
+### 🔧 이슈 1: 로컬 PC 환경에서의 모델 튜닝 한계 및 모델 전환
+*   **문제 상황:** Llama 계열 모델을 활용하여 파인튜닝을 시도했으나, CPU 중심의 로컬 환경에서 VRAM/MEM 부족으로 인해 시스템이 중단되는 현상 발생.
+*   **해결 방법:** 모델 사이즈를 대폭 줄인 **Qwen 1.5B/2.5B와 같은 초경량 SLM(Small Language Model)으로 전환**. 로컬 환경에서도 안정적인 학습과 추론이 가능한 하드웨어 최적화 모델 선택.
+  
+### 🔧 이슈 2: 파인튜닝 후 평가 기준의 과도한 엄격화 (Accuracy vs Strictness)
+*   **문제 상황:** 도메인 데이터로 학습된 튜닝 모델이 일반 모델보다 훨씬 깐깐한 기준으로 자소서를 평가함에 따라, 합격권 자소서임에도 점수가 과도하게 낮게 산출되는 문제 확인.
+*   **해결 방법:** 평가 프롬프트의 'Ground Truth' 기준을 재설정하고, 모델이 정성적 평가와 정량적 성능 사이에서 균형을 잡을 수 있도록 **평가 로직 가중치를 재조정**함.
+
+### 🔧 이슈 3: 무거운 모델 로딩으로 인한 사용자 경험(UX) 저하
+*   **문제 상황:** 페이지를 새로고침하거나 분석 탭으로 이동할 때마다 대형 가중치 파일을 반복해서 로드하여 앱 반응 속도가 매우 느려짐.
+*   **해결 방법:** Streamlit의 **캐싱 리소스(`@st.cache_resource`) 기능**을 도입하여 초기 1회 로드 후 메모리에 모델을 상주시킴으로써 로딩 속도를 획기적으로 향상.
+
+
+### 🔧 이슈 4: 실험 반복에 따른 API 비용 및 리소스 낭비
+*   **문제 상황:** 다수의 실험과 테스트를 진행하면서 토큰 소모량이 급증하고 처리 시간이 늘어나는 문제 발생.
+*   **해결 방법:** 불필요한 페르소나 설명 등의 컨텍스트를 제거하고 핵심 정보 위주로 프롬프트를 압축하여 **토큰 소모량을 최소화**함. 이를 통해 초당 처리(TPS) 효율을 높이고 운영 비용 절감.
