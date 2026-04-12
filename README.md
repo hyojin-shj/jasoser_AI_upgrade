@@ -1,5 +1,6 @@
 # 🚀 AI Resume Coach: 맞춤형 자기소개서 평가 및 개선 시스템
-"Small Language Model(SLM)을 활용한 데이터 기반 취업 컨설팅 및 이력서 최적화 서비스"
+
+### "Small Language Model(SLM)을 활용한 데이터 기반 취업 컨설팅 및 이력서 최적화 서비스"
 
 <img width="1920" height="1080" alt="1" src="https://github.com/user-attachments/assets/549d904c-c234-4f60-950a-04f7d1be33fc" />
 
@@ -29,7 +30,7 @@
 ### 1️⃣ 실시간 AI 자소서 평가 및 피드백
 *   **다각도 분석:** 가독성, 논리성, 직무 적합성 등 7가지 지표를 바탕으로 점수화 및 상세 피드백 제공.
 *   **멀티 모델 비교:** GPT-4와 같은 거대 모델과 자체 튜닝한 SLM(Qwen 1.5B 기반)의 평가 결과를 실시간으로 비교 분석.
-*   <img width="1920" height="1080" alt="12" src="https://github.com/user-attachments/assets/88334227-0c65-4bc2-9466-903fc08544a7" />
+<img width="1920" height="1080" alt="12" src="https://github.com/user-attachments/assets/88334227-0c65-4bc2-9466-903fc08544a7" />
 <img width="1920" height="1080" alt="자소서AI" src="https://github.com/user-attachments/assets/16fe7752-98c2-435b-a004-8cca3385ff10" />
 
 
@@ -82,7 +83,9 @@
  ┣ 📜 model.py             # 모델 구조 정의 및 가중치 관리
  ┣ 📂 data/                # 학습 및 테스트 데이터셋 (.json)
  ┗ 📜 requirements.txt     # 프로젝트 의존성 관리
-```<img width="1920" height="1080" alt="1" src="https://github.com/user-attachments/assets/ecbe47b0-be29-470d-b3d8-92b0a1e45b49" />
+```
+
+<img width="1920" height="1080" alt="1" src="https://github.com/user-attachments/assets/ecbe47b0-be29-470d-b3d8-92b0a1e45b49" />
 
 ## 🚀 트러블 슈팅 (Troubleshooting)
 
