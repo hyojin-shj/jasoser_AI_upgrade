@@ -85,8 +85,6 @@
  ┗ 📜 requirements.txt     # 프로젝트 의존성 관리
 ```
 
-<img width="1920" height="1080" alt="1" src="https://github.com/user-attachments/assets/ecbe47b0-be29-470d-b3d8-92b0a1e45b49" />
-
 ## 🚀 트러블 슈팅 (Troubleshooting)
 
 ### 🔧 이슈 1: 로컬 PC 환경에서의 모델 튜닝 한계 및 모델 전환
